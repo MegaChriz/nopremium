@@ -20,9 +20,9 @@ FEATURES
 * Allows to theme the teaser & message combination displayed to non-premium users.
 
 INSTALLATION
-Copy the nopremium folder to your sites/all/modules directory.
-Navigate to admin/build/modules and enable the module.
-Navigate to admin/user/permissions and set the proper permissions for each content type.
+Copy the nopremium folder to your modules/ directory.
+Navigate to admin/modules and enable the module.
+Navigate to admin/people/permissions and set the proper permissions for each content type.
 
 WHO CAN FULLY VIEW A PREMIUM NODE OF TYPE NODE_TYPE?
 Obviously, any user with the view full NODE_TYPE premium content permission can fully view it. But also:
@@ -35,7 +35,14 @@ Node Option Premium does not have any effect on individual fields displayed in v
 Node Option Premium has no built-in support for time-limited premium contents. But as it integrates with Rules, you can achieve this by using Rules scheduler with it.
 
 CONTACT
+D7 and earlier
 Henri MEDOT <henri.medot[AT]absyx[DOT]fr>
 http://www.absyx.fr
 
-IF YOU LIKE THIS MODULE, PLEASE REVIEW IT AND ADD IT TO FAVORITES AT DRUPALMODULES.COM.
+D8 Port
+Heshan Wanigasooriya <heshan[AT]heidisoft[DOT]com>
+http://heididev.com
+
+D8 Port Supported by ElectricSage, LLC
+Dan Katz <dan.katz[AT]electricsage[DOT]com>
+http://electricsage.com
