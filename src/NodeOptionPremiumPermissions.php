@@ -22,7 +22,7 @@ class NodeOptionPremiumPermissions {
    *   @see \Drupal\user\PermissionHandlerInterface::getPermissions()
    */
   public function nodeTypePermissions() {
-    $perms = array();
+    $perms = [];
     // Generate node permissions for all node types.
     foreach (NodeType::loadMultiple() as $type) {
       $perms += $this->buildPermissions($type);
@@ -42,16 +42,16 @@ class NodeOptionPremiumPermissions {
    */
   protected function buildPermissions(NodeType $type) {
     $type_id = $type->id();
-    $type_params = array('%type_name' => $type->label());
+    $type_params = ['%type_name' => $type->label()];
 
-    return array(
-      "view full $type_id premium content" => array(
+    return [
+      "view full $type_id premium content" => [
         'title' => $this->t('%type_name: View full premium content', $type_params),
-      ),
-      "override $type_id premium content" => array(
+      ],
+      "override $type_id premium content" => [
         'title' => $this->t('%type_name: Override premium option', $type_params),
-      ),
-    );
+      ],
+    ];
   }
 
 }

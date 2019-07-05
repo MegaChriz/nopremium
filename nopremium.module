@@ -20,16 +20,16 @@ function nopremium_form_alter(array &$form, FormStateInterface $form_state) {
     $node_type = $form_state->getBuildInfo()['callback_object']->getEntity();
     $form['premium']['#group'] = 'premium_publish_options';
     $form['premium']['#access'] = ($user->hasPermission('override premium option of any content type') ||  $user->hasPermission('override ' . $node_type->id() . ' premium content'));
-    $form['premium_publish_options'] = array(
+    $form['premium_publish_options'] = [
       '#type' => 'details',
       '#title' => t('Premium Options'),
       '#group' => 'advanced',
-      '#attributes' => array(
-        'class' => array('node-form-premium-publish-options'),
-      ),
+      '#attributes' => [
+        'class' => ['node-form-premium-publish-options'],
+      ],
       '#weight' => 1000,
       '#optional' => TRUE,
-    );
+    ];
   }
   // NodeTypeForm
   if ($form_object instanceof NodeTypeForm) {
@@ -78,13 +78,13 @@ function nopremium_entity_base_field_info(EntityTypeInterface $entity_type) {
       ->setTranslatable(TRUE)
       ->setDefaultValue(0)
       ->setDisplayConfigurable('form', true)
-      ->setDisplayOptions('form', array(
+      ->setDisplayOptions('form', [
         'type' => 'boolean_checkbox',
-        'settings' => array(
+        'settings' => [
           'display_label' => TRUE,
-        ),
+        ],
         'weight' => 16,
-      )
+      ]
     );
     return $fields;
   }
@@ -115,14 +115,14 @@ function nopremium_entity_view_mode_alter(&$view_mode, Drupal\Core\Entity\Entity
  * Implements hook_entity_extra_field_info().
  */
 function nopremium_entity_extra_field_info() {
-  $extra = array();
+  $extra = [];
   foreach (NodeType::loadMultiple() as $bundle) {
-    $extra['node'][$bundle->id()]['display']['premium_message'] = array(
+    $extra['node'][$bundle->id()]['display']['premium_message'] = [
       'label' => t('Premium message'),
       'description' => t('Node option premium module message.'),
       'weight' => 100,
       'visible' => FALSE,
-    );
+    ];
   }
   return $extra;
 }
@@ -138,9 +138,9 @@ function nopremium_node_view(array &$build, \Drupal\Core\Entity\EntityInterface 
     $message = $config->get('default_message');
     $message = !empty($config->get('default_message' . $entity->bundle())) ? $config->get('default_message' . $entity->bundle()) : $message;
     // Replace tokens if avaialbe
-    $message = $token_service->replace($message, array('user' => $user, 'node' => $entity));
-    $build['premium_message'] = array(
+    $message = $token_service->replace($message, ['user' => $user, 'node' => $entity]);
+    $build['premium_message'] = [
       '#markup' => $message,
-    );
+    ];
   }
 }

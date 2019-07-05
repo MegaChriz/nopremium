@@ -67,57 +67,57 @@ class SettingsForm extends ConfigFormBase {
   public function buildForm(array $form, FormStateInterface $form_state, Request $request = NULL) {
     $current_url = Url::createFromRequest($request);
     $nopremium_config = $this->config('nopremium.settings');
-    $form['message'] = array(
+    $form['message'] = [
       '#type' => 'fieldset',
       '#title' => t('Premium messages'),
       '#description' => t('You may customize the messages displayed to unprivileged users trying to view full premium contents.'),
-    );
-    $form['message']['nopremium_message'] = array(
+    ];
+    $form['message']['nopremium_message'] = [
       '#type' => 'textarea',
       '#title' => t('Default message'),
       '#description' => t('This message will apply to all content types with blank messages below.'),
       '#default_value' => $nopremium_config->get('default_message'),
       '#rows' => 3,
       '#required' => TRUE,
-    );
+    ];
     foreach ($this->entityManager->getStorage('node_type')->loadMultiple() as $content_type) {
-       $form['message']['nopremium_message_'. $content_type->id()] = array(
+       $form['message']['nopremium_message_'. $content_type->id()] = [
          '#type' => 'textarea',
-         '#title' => t('Message for %type content type', array('%type' => $content_type->label())),
+         '#title' => t('Message for %type content type', ['%type' => $content_type->label()]),
          '#default_value' => !empty($nopremium_config->get('default_message' . $content_type->id())) ? $nopremium_config->get('default_message' . $content_type->id()) : $nopremium_config->get('default_message'),
          '#rows' => 3,
-       );
+       ];
     }
     if (\Drupal::moduleHandler()->moduleExists('token')) {
-      $form['message']['token_tree'] = array(
+      $form['message']['token_tree'] = [
         '#theme' => 'token_tree_link',
-        '#token_types' => array('user', 'node'),
+        '#token_types' => ['user', 'node'],
         '#weight' => 90,
-      );
+      ];
     }
     else {
-      $form['message']['token_tree'] = array(
-        '#markup' => '<p>' . t('Enable the <a href="@drupal-token">Token module</a> to view the available token browser.', array('@drupal-token' => 'http://drupal.org/project/token')) . '</p>',
-      );
+      $form['message']['token_tree'] = [
+        '#markup' => '<p>' . t('Enable the <a href="@drupal-token">Token module</a> to view the available token browser.', ['@drupal-token' => 'http://drupal.org/project/token']) . '</p>',
+      ];
     }
-    $options = array();
+    $options = [];
     foreach($this->entityManager->getViewModes('node') as $id => $view_mode){
      $options[$id] = $view_mode['label'];
     }
-    $form['nopremium_view_mode'] = array(
+    $form['nopremium_view_mode'] = [
       '#type' => 'select',
       '#title' => t('Premium display mode'),
       '#description' => t('The premium display view mode which we restrict access.'),
       '#default_value' => $nopremium_config->get('view_mode'),
       '#options' => $options,
-    );
-    $form['nopremium_teaser_view_mode'] = array(
+    ];
+    $form['nopremium_teaser_view_mode'] = [
       '#type' => 'select',
       '#title' => t('Teaser display mode'),
       '#description' => t('Teaser display view mode to render for premium contents.'),
       '#default_value' => $nopremium_config->get('teaser_view_mode'),
       '#options' => $options,
-    );
+    ];
     return parent::buildForm($form, $form_state);
   }
 
