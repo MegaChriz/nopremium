@@ -12,28 +12,39 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
-use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 
 /**
  * Defines a form that configures settings.
  */
 class SettingsForm extends ConfigFormBase {
-  
+
   /**
-   * Entity Manager.
+   * The entity type manager.
    *
-   * @var \Drupal\Core\Entity\EntityManagerInterface
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $entityManager;
+  protected $entityTypeManager;
+
+  /**
+   * The entity display repository.
+   *
+   * @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface
+   */
+  protected $entityDisplayRepository;
 
   /**
    * Constructs a new SettingsForm object.
    *
-   * @param \Drupal\Core\Entity\EntityManagerInterface $$$entity_manager
-   *   Entity Manager.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
+   * @param \Drupal\Core\Entity\EntityDisplayRepositoryInterface $entity_display_repository
+   *   The entity display repository.
    */
-  public function __construct(EntityManagerInterface $entity_manager) {
-    $this->entityManager = $entity_manager;
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityDisplayRepositoryInterface $entity_display_repository) {
+    $this->entityTypeManager = $entity_type_manager;
+    $this->entityDisplayRepository = $entity_display_repository;
   }
 
   /**
@@ -41,7 +52,8 @@ class SettingsForm extends ConfigFormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('entity.manager')
+      $container->get('entity_type.manager'),
+      $container->get('entity_display.repository')
     );
   }
   
@@ -80,7 +92,7 @@ class SettingsForm extends ConfigFormBase {
       '#rows' => 3,
       '#required' => TRUE,
     ];
-    foreach ($this->entityManager->getStorage('node_type')->loadMultiple() as $content_type) {
+    foreach ($this->entityTypeManager->getStorage('node_type')->loadMultiple() as $content_type) {
        $form['message']['nopremium_message_'. $content_type->id()] = [
          '#type' => 'textarea',
          '#title' => t('Message for %type content type', ['%type' => $content_type->label()]),
@@ -101,8 +113,8 @@ class SettingsForm extends ConfigFormBase {
       ];
     }
     $options = [];
-    foreach($this->entityManager->getViewModes('node') as $id => $view_mode){
-     $options[$id] = $view_mode['label'];
+    foreach ($this->entityDisplayRepository->getViewModes('node') as $id => $view_mode) {
+      $options[$id] = $view_mode['label'];
     }
     $form['nopremium_view_mode'] = [
       '#type' => 'select',
@@ -131,7 +143,7 @@ class SettingsForm extends ConfigFormBase {
       ->set('view_mode', $values['nopremium_view_mode'])
       ->set('teaser_view_mode', $values['nopremium_teaser_view_mode'])
       ->save();
-    foreach ($this->entityManager->getStorage('node_type')->loadMultiple() as $content_type) {
+    foreach ($this->entityTypeManager->getStorage('node_type')->loadMultiple() as $content_type) {
       $this->config('nopremium.settings')
         ->set('default_message' . $content_type->id(), $values['nopremium_message_'. $content_type->id()])
         ->save();
