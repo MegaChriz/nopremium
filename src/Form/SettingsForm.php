@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\nopremium\Form\SettingsForm.
- */
-
 namespace Drupal\nopremium\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
@@ -81,13 +76,13 @@ class SettingsForm extends ConfigFormBase {
     $nopremium_config = $this->config('nopremium.settings');
     $form['message'] = [
       '#type' => 'fieldset',
-      '#title' => t('Premium messages'),
-      '#description' => t('You may customize the messages displayed to unprivileged users trying to view full premium contents.'),
+      '#title' => $this->t('Premium messages'),
+      '#description' => $this->t('You may customize the messages displayed to unprivileged users trying to view full premium contents.'),
     ];
     $form['message']['nopremium_message'] = [
       '#type' => 'textarea',
-      '#title' => t('Default message'),
-      '#description' => t('This message will apply to all content types with blank messages below.'),
+      '#title' => $this->t('Default message'),
+      '#description' => $this->t('This message will apply to all content types with blank messages below.'),
       '#default_value' => $nopremium_config->get('default_message'),
       '#rows' => 3,
       '#required' => TRUE,
@@ -95,7 +90,7 @@ class SettingsForm extends ConfigFormBase {
     foreach ($this->entityTypeManager->getStorage('node_type')->loadMultiple() as $content_type) {
        $form['message']['nopremium_message_'. $content_type->id()] = [
          '#type' => 'textarea',
-         '#title' => t('Message for %type content type', ['%type' => $content_type->label()]),
+         '#title' => $this->t('Message for %type content type', ['%type' => $content_type->label()]),
          '#default_value' => !empty($nopremium_config->get('default_message' . $content_type->id())) ? $nopremium_config->get('default_message' . $content_type->id()) : $nopremium_config->get('default_message'),
          '#rows' => 3,
        ];
@@ -109,7 +104,7 @@ class SettingsForm extends ConfigFormBase {
     }
     else {
       $form['message']['token_tree'] = [
-        '#markup' => '<p>' . t('Enable the <a href="@drupal-token">Token module</a> to view the available token browser.', ['@drupal-token' => 'http://drupal.org/project/token']) . '</p>',
+        '#markup' => '<p>' . $this->t('Enable the <a href="@drupal-token">Token module</a> to view the available token browser.', ['@drupal-token' => 'http://drupal.org/project/token']) . '</p>',
       ];
     }
     $options = [];
@@ -118,15 +113,15 @@ class SettingsForm extends ConfigFormBase {
     }
     $form['nopremium_view_mode'] = [
       '#type' => 'select',
-      '#title' => t('Premium display mode'),
-      '#description' => t('The premium display view mode which we restrict access.'),
+      '#title' => $this->t('Premium display mode'),
+      '#description' => $this->t('The premium display view mode which we restrict access.'),
       '#default_value' => $nopremium_config->get('view_mode'),
       '#options' => $options,
     ];
     $form['nopremium_teaser_view_mode'] = [
       '#type' => 'select',
-      '#title' => t('Teaser display mode'),
-      '#description' => t('Teaser display view mode to render for premium contents.'),
+      '#title' => $this->t('Teaser display mode'),
+      '#description' => $this->t('Teaser display view mode to render for premium contents.'),
       '#default_value' => $nopremium_config->get('teaser_view_mode'),
       '#options' => $options,
     ];
