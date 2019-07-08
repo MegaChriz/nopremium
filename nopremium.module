@@ -2,6 +2,7 @@
 
 /**
  * @file
+ * Hook implementations.
  */
 
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
@@ -16,12 +17,14 @@ use Drupal\node\Entity\NodeType;
 /**
  * Implements hook_form_alter().
  *
- * @param $form
- * @param \Drupal\Core\Form\FormStateInterface $form_state
+ * Alters the following forms:
+ * - node add/edit forms;
+ * - node type add/edit forms.
  */
 function nopremium_form_alter(array &$form, FormStateInterface $form_state) {
   $form_object = $form_state->getFormObject();
-  // NodeForm.
+
+  // Alter node add/edit forms.
   if ($form_object instanceof NodeForm) {
     $user = \Drupal::currentUser();
     $node_type = $form_state->getBuildInfo()['callback_object']->getEntity();
@@ -38,7 +41,8 @@ function nopremium_form_alter(array &$form, FormStateInterface $form_state) {
       '#optional' => TRUE,
     ];
   }
-  // NodeTypeForm.
+
+  // Alter node type add/edit forms.
   if ($form_object instanceof NodeTypeForm) {
     $form['workflow']['options']['#options']['premium'] = t('Premium content');
     $form['actions']['submit']['#submit'][] = 'nopremium_node_type_edit_form_submit';
@@ -60,9 +64,6 @@ function nopremium_form_alter(array &$form, FormStateInterface $form_state) {
 /**
  * Submit handler for node type forms.
  *
- * @param $form
- * @param \Drupal\Core\Form\FormStateInterface $form_state
- *
  * @see nopremium_form_alter()
  */
 function nopremium_node_type_edit_form_submit($form, FormStateInterface $form_state) {
@@ -78,10 +79,6 @@ function nopremium_node_type_edit_form_submit($form, FormStateInterface $form_st
 
 /**
  * Implements hook_entity_base_field_info().
- *
- * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
- *
- * @return array
  */
 function nopremium_entity_base_field_info(EntityTypeInterface $entity_type) {
   if ($entity_type->id() === 'node') {
@@ -107,11 +104,6 @@ function nopremium_entity_base_field_info(EntityTypeInterface $entity_type) {
 
 /**
  * Implements entity_view_mode_alter().
- *
- * @param string $view_mode
- * @param \Drupal\Core\Entity\EntityInterface $entity
- * @param \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display
- * @param array $view_mode
  */
 function nopremium_entity_view_mode_alter(&$view_mode, EntityInterface $entity, $context) {
   $user = \Drupal::currentUser();
@@ -143,7 +135,7 @@ function nopremium_entity_extra_field_info() {
 }
 
 /**
- * Implements hook_ENTITY_TYPE_view().
+ * Implements hook_ENTITY_TYPE_view() for 'node'.
  */
 function nopremium_node_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
   $user = \Drupal::currentUser();
@@ -154,7 +146,7 @@ function nopremium_node_view(array &$build, EntityInterface $entity, EntityViewD
     && !empty($entity->premium->value)) {
     $message = $config->get('default_message');
     $message = !empty($config->get('default_message' . $entity->bundle())) ? $config->get('default_message' . $entity->bundle()) : $message;
-    // Replace tokens if avaialbe.
+    // Replace tokens if they are available in the premium message.
     $message = $token_service->replace($message, ['user' => $user, 'node' => $entity]);
     $build['premium_message'] = [
       '#markup' => $message,
