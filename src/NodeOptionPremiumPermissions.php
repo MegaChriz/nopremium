@@ -17,7 +17,8 @@ class NodeOptionPremiumPermissions {
    *
    * @return array
    *   The node type permissions.
-   *   @see \Drupal\user\PermissionHandlerInterface::getPermissions()
+   *
+   * @see \Drupal\user\PermissionHandlerInterface::getPermissions()
    */
   public function nodeTypePermissions() {
     $perms = [];

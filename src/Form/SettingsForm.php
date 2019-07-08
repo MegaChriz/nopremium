@@ -51,7 +51,7 @@ class SettingsForm extends ConfigFormBase {
       $container->get('entity_display.repository')
     );
   }
-  
+
   /**
    * {@inheritdoc}
    */
@@ -88,12 +88,12 @@ class SettingsForm extends ConfigFormBase {
       '#required' => TRUE,
     ];
     foreach ($this->entityTypeManager->getStorage('node_type')->loadMultiple() as $content_type) {
-       $form['message']['nopremium_message_'. $content_type->id()] = [
-         '#type' => 'textarea',
-         '#title' => $this->t('Message for %type content type', ['%type' => $content_type->label()]),
-         '#default_value' => !empty($nopremium_config->get('default_message' . $content_type->id())) ? $nopremium_config->get('default_message' . $content_type->id()) : $nopremium_config->get('default_message'),
-         '#rows' => 3,
-       ];
+      $form['message']['nopremium_message_' . $content_type->id()] = [
+        '#type' => 'textarea',
+        '#title' => $this->t('Message for %type content type', ['%type' => $content_type->label()]),
+        '#default_value' => !empty($nopremium_config->get('default_message' . $content_type->id())) ? $nopremium_config->get('default_message' . $content_type->id()) : $nopremium_config->get('default_message'),
+        '#rows' => 3,
+      ];
     }
     if (\Drupal::moduleHandler()->moduleExists('token')) {
       $form['message']['token_tree'] = [
@@ -140,9 +140,10 @@ class SettingsForm extends ConfigFormBase {
       ->save();
     foreach ($this->entityTypeManager->getStorage('node_type')->loadMultiple() as $content_type) {
       $this->config('nopremium.settings')
-        ->set('default_message' . $content_type->id(), $values['nopremium_message_'. $content_type->id()])
+        ->set('default_message' . $content_type->id(), $values['nopremium_message_' . $content_type->id()])
         ->save();
     }
     parent::submitForm($form, $form_state);
   }
+
 }

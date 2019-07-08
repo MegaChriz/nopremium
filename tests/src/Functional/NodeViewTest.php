@@ -2,8 +2,6 @@
 
 namespace Drupal\Tests\nopremium\Functional;
 
-use Drupal\Tests\nopremium\Functional\NopremiumBrowserTestBase;
-
 /**
  * Tests displaying nodes.
  *
