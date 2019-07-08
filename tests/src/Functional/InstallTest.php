@@ -58,4 +58,38 @@ class InstallTest extends BrowserTestBase {
     $this->assertTrue($this->moduleHandler->moduleExists('nopremium'));
   }
 
+  /**
+   * Tests if viewing a node after installation doesn't cause errors.
+   */
+  public function testInstallationWithExistingNode() {
+    // First, install the modules 'node' and 'views'.
+    $this->assertTrue($this->moduleInstaller->install(['node', 'views']));
+
+    // Create a content type and a node.
+    $this->drupalCreateContentType(['type' => 'foo']);
+    $node = $this->drupalCreateNode([
+      'type' => 'foo',
+      'body'      => [
+        [
+          'value' => 'Lorem ipsum',
+          'format' => filter_default_format(),
+        ],
+      ],
+      'promote' => TRUE,
+    ]);
+
+    // Install nopremium.
+    $this->assertTrue($this->moduleInstaller->install(['nopremium']));
+
+    // View the node.
+    $this->drupalGet($node->toUrl());
+    $this->assertSession()->pageTextContains('Lorem ipsum');
+    $this->assertSession()->pageTextNotContains('The full content of this page is available to premium users only.');
+
+    // View the node in teaser mode.
+    $this->drupalGet('node');
+    $this->assertSession()->pageTextContains('Lorem ipsum');
+    $this->assertSession()->pageTextNotContains('The full content of this page is available to premium users only.');
+  }
+
 }
