@@ -91,7 +91,7 @@ class SettingsForm extends ConfigFormBase {
       $form['message']['nopremium_message_' . $content_type->id()] = [
         '#type' => 'textarea',
         '#title' => $this->t('Message for %type content type', ['%type' => $content_type->label()]),
-        '#default_value' => !empty($nopremium_config->get('default_message' . $content_type->id())) ? $nopremium_config->get('default_message' . $content_type->id()) : $nopremium_config->get('default_message'),
+        '#default_value' => $nopremium_config->get('default_message' . $content_type->id()),
         '#rows' => 3,
       ];
     }
