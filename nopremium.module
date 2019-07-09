@@ -114,6 +114,8 @@ function nopremium_entity_view_mode_alter(&$view_mode, EntityInterface $entity, 
     && !empty($entity->premium->value)
     && $view_mode == $config->get('view_mode')
     && !($user->hasPermission('view full premium content of any type') ||  $user->hasPermission('view full ' . $entity->bundle() . ' premium content'))) {
+    // Store original view mode.
+    $entity->original_view_mode = $view_mode;
     $view_mode = $config->get('teaser_view_mode');
   }
 }
@@ -142,14 +144,39 @@ function nopremium_node_view(array &$build, EntityInterface $entity, EntityViewD
   $token_service = \Drupal::token();
   $config = \Drupal::config('nopremium.settings');
   if ($view_mode == $config->get('teaser_view_mode')
+    && !empty($entity->original_view_mode)
     && $entity->hasField('premium')
     && !empty($entity->premium->value)) {
-    $message = $config->get('default_message');
-    $message = !empty($config->get('default_message' . $entity->bundle())) ? $config->get('default_message' . $entity->bundle()) : $message;
+    if ($config->get('default_message' . $entity->bundle())) {
+      $message = $config->get('default_message' . $entity->bundle());
+    }
+    else {
+      $message = $config->get('default_message');
+    }
+
     // Replace tokens if they are available in the premium message.
     $message = $token_service->replace($message, ['user' => $user, 'node' => $entity]);
     $build['premium_message'] = [
       '#markup' => $message,
     ];
+
+    // Hide links by default.
+    if (isset($build['links'])) {
+      $build['links']['#access'] = FALSE;
+    }
+  }
+}
+
+/**
+ * Implements template_preprocess_node().
+ */
+function nopremium_preprocess_node(&$variables) {
+  /** @var \Drupal\node\NodeInterface $node */
+  $node = $variables['elements']['#node'];
+
+  if (!empty($node->original_view_mode)) {
+    if ($node->original_view_mode == 'full' && node_is_page($node)) {
+      $variables['page'] = TRUE;
+    }
   }
 }
