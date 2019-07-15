@@ -165,8 +165,8 @@ function nopremium_node_view(array &$build, EntityInterface $entity, EntityViewD
     && !empty($entity->original_view_mode)
     && $entity->hasField('premium')
     && !empty($entity->premium->value)) {
-    if ($config->get('default_message' . $entity->bundle())) {
-      $message = $config->get('default_message' . $entity->bundle());
+    if ($config->get('messages.' . $entity->bundle())) {
+      $message = $config->get('messages.' . $entity->bundle());
     }
     else {
       $message = $config->get('default_message');

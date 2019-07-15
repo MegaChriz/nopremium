@@ -97,4 +97,25 @@ class NodeViewTest extends NopremiumBrowserTestBase {
     $this->assertSession()->pageTextNotContains('The full content of this page is available to premium users only.');
   }
 
+  /**
+   * Tests with specific content type message.
+   */
+  public function testSpecificContentTypeMessage() {
+    // Change message for 'foo' content type.
+    $this->config('nopremium.settings')
+      ->set('messages', [
+        'foo' => 'The foo message',
+      ])
+      ->save();
+
+    // Create a premium node.
+    $node = $this->createNodeWithBodyValue('Lorem ipsum', [
+      'premium' => TRUE,
+    ]);
+
+    $this->drupalGet($node->toUrl());
+    $this->assertSession()->pageTextNotContains('Lorem ipsum');
+    $this->assertSession()->pageTextContains('The foo message');
+  }
+
 }

@@ -6,6 +6,11 @@ nopremium.settings:
     default_message:
       type: string
       label: 'Premium message'
+    messages:
+      type: sequence
+      label: 'Message per content type'
+      sequence:
+        type: string
     view_modes:
       type: sequence
       label: 'Premium view modes'

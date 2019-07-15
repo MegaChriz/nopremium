@@ -26,7 +26,7 @@ abstract class NopremiumBrowserTestBase extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     $this->admin = $this->drupalCreateUser([
