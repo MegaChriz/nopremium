@@ -4,7 +4,6 @@ namespace Drupal\Tests\nopremium\Kernel;
 
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\Entity\Entity\EntityViewMode;
-use Drupal\node\Entity\Node;
 
 /**
  * Tests displaying nodes.
