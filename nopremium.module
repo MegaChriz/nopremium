@@ -118,9 +118,13 @@ function nopremium_entity_view_mode_alter(&$view_mode, EntityInterface $entity, 
   /** @var \Drupal\nopremium\NodeOptionPremiumHelperInterface $helper */
   $helper = \Drupal::service('nopremium.helper');
 
+  // Check if view mode applies.
+  $view_modes_config = $config->get('view_modes');
+  $view_mode_applies = empty($view_modes_config) ? TRUE : !empty($view_modes_config[$view_mode]);
+
   // For the nodes in full mode check permissions before give access.
-  if ($entity->getEntityTypeId() == 'node'
-    && $view_mode == $config->get('view_mode')
+  if ($view_mode_applies
+    && $entity->getEntityTypeId() == 'node'
     && !$helper->hasFullAccess($entity, $user)
   ) {
     // Store original view mode.

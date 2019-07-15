@@ -111,11 +111,11 @@ class SettingsForm extends ConfigFormBase {
     foreach ($this->entityDisplayRepository->getViewModes('node') as $id => $view_mode) {
       $options[$id] = $view_mode['label'];
     }
-    $form['nopremium_view_mode'] = [
-      '#type' => 'select',
-      '#title' => $this->t('Premium display mode'),
-      '#description' => $this->t('The premium display view mode which we restrict access.'),
-      '#default_value' => $nopremium_config->get('view_mode'),
+    $form['view_modes'] = [
+      '#type' => 'checkboxes',
+      '#title' => $this->t('Premium display modes'),
+      '#description' => $this->t('Select which for view modes access is restricted. When none is selected, all are restricted.'),
+      '#default_value' => $nopremium_config->get('view_modes'),
       '#options' => $options,
     ];
     $form['nopremium_teaser_view_mode'] = [
@@ -135,7 +135,7 @@ class SettingsForm extends ConfigFormBase {
     $values = $form_state->getValues();
     $this->config('nopremium.settings')
       ->set('default_message', $values['nopremium_message'])
-      ->set('view_mode', $values['nopremium_view_mode'])
+      ->set('view_modes', $values['view_modes'])
       ->set('teaser_view_mode', $values['nopremium_teaser_view_mode'])
       ->save();
     foreach ($this->entityTypeManager->getStorage('node_type')->loadMultiple() as $content_type) {
