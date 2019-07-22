@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\nopremium\Functional;
 
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -33,6 +34,22 @@ abstract class NopremiumBrowserTestBase extends BrowserTestBase {
       'administer content types',
       'administer nodes',
     ]);
+  }
+
+  /**
+   * Reloads an entity.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity to reload.
+   *
+   * @return \Drupal\Core\Entity\EntityInterface
+   *   The reloaded entity.
+   */
+  protected function reloadEntity(EntityInterface $entity) {
+    /** @var \Drupal\Core\Entity\ $storageEntityStorageInterface */
+    $storage = \Drupal::entityTypeManager()->getStorage($entity->getEntityTypeId());
+    $storage->resetCache([$entity->id()]);
+    return $storage->load($entity->id());
   }
 
 }

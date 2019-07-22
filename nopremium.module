@@ -32,9 +32,9 @@ function nopremium_form_alter(array &$form, FormStateInterface $form_state) {
   // Alter node add/edit forms.
   if ($form_object instanceof NodeForm) {
     $user = \Drupal::currentUser();
-    $node_type = $form_state->getBuildInfo()['callback_object']->getEntity();
+    $node_type_id = $form_state->getBuildInfo()['callback_object']->getEntity()->getType();
     $form['premium']['#group'] = 'premium_publish_options';
-    $form['premium']['#access'] = ($user->hasPermission('override premium option of any content type') ||  $user->hasPermission('override ' . $node_type->id() . ' premium content'));
+    $form['premium']['#access'] = ($user->hasPermission('override premium option of any content type') ||  $user->hasPermission('override ' . $node_type_id . ' premium content'));
     $form['premium_publish_options'] = [
       '#type' => 'details',
       '#title' => t('Premium Options'),

@@ -35,7 +35,7 @@ class SettingsFormTest extends NopremiumBrowserTestBase {
    */
   public function testNoAccess() {
     $this->drupalGet('/admin/config/content/nopremium');
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
   }
 
   /**
