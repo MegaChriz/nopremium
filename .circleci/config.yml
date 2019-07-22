@@ -81,7 +81,7 @@ functional_tests: &functional_tests
     - run:
         working_directory: /var/www/html
         command: |
-          ./test-functional.sh $CIRCLE_PROJECT_REPONAME
+          ./test-functional.sh $CIRCLE_PROJECT_REPONAME --suppress-deprecations
 
     - store_test_results:
         path: /var/www/html/artifacts/phpunit
