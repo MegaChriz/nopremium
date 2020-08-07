@@ -231,6 +231,7 @@ class PremiumContent extends ProcessorPluginBase {
     }
 
     // Authors of premium nodes may always view their own nodes.
+    $premium_conditions = $query->createConditionGroup('OR');
     if ($account->isAuthenticated()) {
       $author_conditions = $query->createConditionGroup('OR');
       foreach ($affected_datasources as $entity_type => $datasources) {
@@ -243,10 +244,9 @@ class PremiumContent extends ProcessorPluginBase {
           }
         }
       }
-      $access_conditions->addConditionGroup($author_conditions);
+      $premium_conditions->addConditionGroup($author_conditions);
     }
 
-    $premium_conditions = $query->createConditionGroup('OR');
     foreach (NodeType::loadMultiple() as $type) {
       $type_id = $type->id();
       if (!$account->hasPermission("view full $type_id premium content")) {
